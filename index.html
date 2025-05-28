@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>我的博客</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header>
+    <h1>我的博客</h1>
+    <p>分享知识 · 记录成长</p>
+  </header>
+
+  <main>
+    <ul class="post-list">
+      {% for post in site.posts %}
+        <li>
+          <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
+          <time>{{ post.date | date: "%Y年%m月%d日" }}</time>
+          <p>{{ post.excerpt }}</p>
+        </li>
+      {% endfor %}
+    </ul>
+  </main>
+</body>
+</html>
