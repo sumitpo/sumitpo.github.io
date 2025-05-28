@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title>{{ site.title }}{% if page.title %} | {{ page.title }}{% endif %}</title>
     <link rel="stylesheet" href="/style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
     <header>
@@ -17,7 +18,9 @@
     </header>
 
     <!-- 左侧边栏 -->
-    <div class="sidebar">
+    <input type="checkbox" id="sidebar-toggle" class="sidebar-toggle">
+    <label for="sidebar-toggle" class="menu-button">&#9776; 菜单</label>
+    <aside class="sidebar">
       <h2><a href="/">{{ site.title }}</a></h2>
       <nav>
         <ul>
@@ -32,6 +35,14 @@
     <main>
       {{ content }}
     </main>
+
+    <!-- 右侧 Road Fighter 动画面板 -->
+    <aside class="right-sidebar">
+      <div class="road-fighter-container">
+        <div class="car"></div>
+        <div class="track"></div>
+      </div>
+    </aside>
 
     <footer>
       <p>© {{ site.author }} · Built with Jekyll & GitHub Pages</p>
