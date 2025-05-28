@@ -1,0 +1,16 @@
+---
+layout: default
+---
+
+<h1>分类：{{ page.category }}</h1>
+
+<ul class="post-list">
+  {% assign posts = site.posts | where: "categories", page.category %}
+  {% for post in posts %}
+    <li>
+      <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
+      <time>{{ post.date | date: "%Y年%m月%d日" }}</time>
+      <p>{{ post.excerpt }}</p>
+    </li>
+  {% endfor %}
+</ul>
