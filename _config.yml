@@ -1,4 +1,12 @@
 title: 我的博客
 email: your@email.com
-description: 一个简单的个人博客
-theme: jekyll-theme-slate
+description: 一个简单的 Jekyll 博客
+baseurl: ""
+url: "https://yourname.github.io" 
+author: 你的名字
+paginate: 5
+paginate_path: "/page:num/"
+markdown: kramdown
+theme: jekyll-theme-minimal
+plugins:
+  - jekyll-paginate
