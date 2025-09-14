@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="category" content="template">
+    <title>Markov Algorithms - Your Name</title>
+    <link rel="stylesheet" href="../css/style.css">
+  </head>
+  <body>
+    <div class="container">
+
+      <header>
+        <h1>Markov Algorithms</h1>
+        <p><em>A deep dive into normal Markov algorithms as a model of computation.</em></p>
+        <p><small>Last updated: September 13, 2025</small></p>
+      </header>
+
+      <main>
+        <p>Post systems (think of generative grammars) are string transformations based on repeated, perhaps context-sensitive, substitutions -- replacements of substrings by other strings...</p>
+
+        <p>Normal Markov algorithm is hence a machine that repeatedly rewrites the given input string according to an ordered sequence of rewriting rules...</p>
+
+        <h2>Example: Binary to Unary</h2>
+        <p>As an example, the following sequence of rules converts a big-endian binary number into unary:</p>
+        <pre><code>let bin_to_unary = [|
+ rule "1"   "0|";
+ rule "|0"  "0||";
+ rule "0"   "";
+  |]</code></pre>
+
+        <p>For example, `run bin_to_unary "110"` produces the string `"||||||"`...</p>
+
+        <p>Curious readers may want to work out how the following rules manage to rewrite the string made of `a` followed by `#` and more `a` into the string of `a`...</p>
+
+        <hr>
+
+        <p><a href="../index.html">← Back to Main Page</a></p>
+      </main>
+
+      <footer>
+        <p><a href="https://github.com/yourusername/yourusername.github.io">Source on GitHub</a></p>
+      </footer>
+    </div>
+  </body>
+</html>
