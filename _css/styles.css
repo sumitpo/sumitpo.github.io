@@ -1,0 +1,15 @@
+
+BODY {
+    max-width: 95ch;
+    margin: auto;
+    padding: 0.5em;
+}
+.heading {
+    text-align: center;
+}
+.small {
+    font-size: 90%;
+}
+dd {
+    margin: 2px 0 1em;
+}
