@@ -117,6 +117,7 @@ function buildFooter(config) {
  * @returns {Object} 一个对象，键是类别名，值是该类别下所有文章的数组。
  */
 async function buildPostMap() {
+  console.log("SITE_CONFIG is " + SITE_CONFIG)
   const htmlFiles = SITE_CONFIG.postFiles;
 
   if (htmlFiles.length === 0) {

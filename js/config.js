@@ -11,8 +11,11 @@ const SITE_CONFIG = {
     "collects.html",
     "computer-graphic.html",
     "cxx-template.html",
+    "hacking-resources.html",
+    "laugh.html",
     "markov-algorithms.html",
     "misc.html",
+    "network.html",
     "python-template.html"
   ]
 };
