@@ -11,6 +11,7 @@ const SITE_CONFIG = {
     "collects.html",
     "computer-graphic.html",
     "cxx-template.html",
+    "dot-files.html",
     "hacking-resources.html",
     "laugh.html",
     "markov-algorithms.html",

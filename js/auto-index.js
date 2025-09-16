@@ -72,10 +72,20 @@ function buildHeader(config) {
   const description = document.createElement('p');
   description.textContent = config.description;
 
+  const cveLink = document.createElement('a');
+  ccLink.href = 'https://www.cvedetails.com/';
+  ccLink.textContent = 'cve';
+
+  const phrackLink = document.createElement('a');
+  ccLink.href = 'https://phrack.org';
+  ccLink.textContent = 'news';
+
   // 组装 header
   header.appendChild(h1);
   header.appendChild(subtitle);
   header.appendChild(description);
+  header.appendChild(cveLink);
+  header.appendChild(phrackLink);
 
   return header; // 返回构建好的元素
 }
