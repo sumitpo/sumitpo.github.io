@@ -1,12 +1,28 @@
 // js/auto-index.js
 
 /**
+ * 动态加载并返回最新的 SITE_CONFIG
+ * 每次调用都会强制重新加载 config.js，绕过缓存
+ */
+async function loadSiteConfig() {
+    try {
+        // 动态导入 + 时间戳缓存清除
+        const module = await import(`./config.js?t=${Date.now()}`);
+        return module.SITE_CONFIG || module.default;
+    } catch (error) {
+        console.error("❌ Failed to load config.js:", error);
+        throw new Error("Configuration file is missing or invalid.");
+    }
+}
+
+/**
  * 构建分类定义列表 (dl/dt/dd)
  * 严格模仿 okmij.org/ftp/ 的 "Shortcuts" 区域格式。
+ * @param {Object} config - 站点配置对象，包含 title, subtitle, description
  * @param {Object} postMap - 来自 buildPostMap() 的数据，键为类别，值为文章数组
  * @returns {HTMLElement} 完整构建的 <dl class="category-list"> 元素
  */
-function buildCategoryList(postMap) {
+function buildCategoryList(config, postMap) {
   const dl = document.createElement('dl');
   dl.className = 'category-list';
 
@@ -31,7 +47,7 @@ function buildCategoryList(postMap) {
     // 构建链接列表
     articles.forEach((article, index) => {
       const link = document.createElement('a');
-      link.href = `${SITE_CONFIG.postsDir}${article.filename}`;
+      link.href = `${config.postsDir}${article.filename}`;
       link.textContent = article.slug; // 显示文件名 (slug)
 
       // 将链接添加到 dd
@@ -58,6 +74,29 @@ function buildCategoryList(postMap) {
  * @returns {HTMLElement} 完整构建的 <header> 元素
  */
 function buildHeader(config) {
+  const links = [
+    { url: "https://phrack.org", text: "news" },
+    { url: "https://www.cvedetails.com/", text: "cve" }
+  ];
+  const linksContainer = document.createElement("div");
+  linksContainer.className = "header_links"
+
+  links.forEach((link, index) => {
+    if (index > 0) {
+      // Add separator before link (except first)
+      const separator = document.createTextNode(" | ");
+      linksContainer.appendChild(separator);
+    }
+
+    const a = document.createElement("a");
+    a.href = link.url;
+    a.textContent = link.text;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+
+    linksContainer.appendChild(a);
+  });
+
   const header = document.createElement('header');
 
   // 创建 h1
@@ -72,20 +111,11 @@ function buildHeader(config) {
   const description = document.createElement('p');
   description.textContent = config.description;
 
-  const cveLink = document.createElement('a');
-  ccLink.href = 'https://www.cvedetails.com/';
-  ccLink.textContent = 'cve';
-
-  const phrackLink = document.createElement('a');
-  ccLink.href = 'https://phrack.org';
-  ccLink.textContent = 'news';
-
   // 组装 header
   header.appendChild(h1);
   header.appendChild(subtitle);
   header.appendChild(description);
-  header.appendChild(cveLink);
-  header.appendChild(phrackLink);
+  header.appendChild(linksContainer);
 
   return header; // 返回构建好的元素
 }
@@ -124,11 +154,11 @@ function buildFooter(config) {
 /**
  * 核心函数：从 posts/ 目录读取所有 .html 文件，解析 <h1> 和第一个段落，
  * 并返回一个按类别分组的、用于构建表格的数据结构。
+ * @param {Object} config - 站点配置对象，包含 title, subtitle, description
  * @returns {Object} 一个对象，键是类别名，值是该类别下所有文章的数组。
  */
-async function buildPostMap() {
-  console.log("SITE_CONFIG is " + SITE_CONFIG)
-  const htmlFiles = SITE_CONFIG.postFiles;
+async function buildPostMap(config) {
+  const htmlFiles = config.postFiles;
 
   if (htmlFiles.length === 0) {
     console.warn("No articles found in the posts/ directory.");
@@ -140,7 +170,7 @@ async function buildPostMap() {
   // Step 2: 异步获取每篇文章的 <h1> 和首个非空段落
   const articles = await Promise.all(
     htmlFiles.map(async (filename) => {
-      const res = await fetch(SITE_CONFIG.postsDir + filename);
+      const res = await fetch(config.postsDir + filename);
       if (!res.ok) {
         console.warn(`Failed to fetch ${filename}: ${res.status}`);
         return null;
@@ -152,6 +182,7 @@ async function buildPostMap() {
       let category = '';
       if (metaCategory && metaCategory.content.trim().length > 0) {
         category = metaCategory.content.trim();
+        console.log(config.postsDir + filename, " ", category)
       } else {
         category = 'others'; // 自动设置默认类别
         console.log(`[Auto-inject] No <meta name="category"> found in ${filename}, setting category to '${category}'.`);
@@ -189,6 +220,7 @@ async function buildPostMap() {
     }
     categories[article.category].push(article);
   });
+  console.log("the categories are ", categories)
 
   return categories;
 }
@@ -197,10 +229,11 @@ async function buildPostMap() {
  * 核心函数：接收 postMap 数据，生成一个完整的 HTML <table> 元素。
  * 表格格式严格模仿 okmij.org/ftp/ 的 "Shortcuts" 区域。
  * 每行：第一列是类别名（加粗），第二列是分号分隔的链接列表。
+ * @param {Object} config - 站点配置对象，包含 title, subtitle, description
  * @param {Object} postMap - 来自 buildPostMap() 的数据
  * @returns {HTMLElement} 一个完整的 <table> 元素
  */
-function createKnowledgeTable(postMap) {
+function createKnowledgeTable(config, postMap) {
   // 创建表格并设置属性
   const table = document.createElement('table');
   table.className = 'knowledge-table';
@@ -214,7 +247,7 @@ function createKnowledgeTable(postMap) {
 
   const postsCell = document.createElement('td')
   postsCell.className = "posts"
-  postsCell.appendChild(buildCategoryList(postMap))
+  postsCell.appendChild(buildCategoryList(config, postMap))
 
   const languageCell = document.createElement('td');
   languageCell.classList = "language";
@@ -233,6 +266,9 @@ function createKnowledgeTable(postMap) {
  * 最后将表格插入到 index.html 的 <main> 中。
  */
 async function buildAutoIndex() {
+  const config = await loadSiteConfig();
+
+  console.log("Loaded config:", config);
   const mainContainer = document.querySelector('main');
   if (!mainContainer) {
     console.error("Main container not found in index.html");
@@ -242,15 +278,15 @@ async function buildAutoIndex() {
   mainContainer.innerHTML = '<p>Loading knowledge base...</p>';
 
   try {
-    const postMap = await buildPostMap();
-    const knowledgeTable = createKnowledgeTable(postMap);
+    const postMap = await buildPostMap(config);
+    const knowledgeTable = createKnowledgeTable(config, postMap);
     mainContainer.innerHTML = '';
 
-    const header = buildHeader(SITE_CONFIG)
+    const header = buildHeader(config)
     mainContainer.appendChild(header);
     mainContainer.appendChild(knowledgeTable);
 
-    const footer = buildFooter(SITE_CONFIG)
+    const footer = buildFooter(config)
     mainContainer.appendChild(footer);
 
     console.log("Knowledge base index built successfully!");

@@ -27,6 +27,7 @@ header p {
     margin-left: auto;
     margin-right: auto;
 }
+
 a {
     color: #2980b9;
 }
@@ -56,4 +57,9 @@ footer a {
 }
 .small {
     font-size: 90%;
+}
+.header_links {
+    /* font-style: italic; */
+    color: #555;
+    font-size: 0.8rem;
 }
