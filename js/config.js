@@ -18,8 +18,10 @@ export const SITE_CONFIG = {
     "laugh.html",
     "markov-algorithms.html",
     "misc.html",
+    "music.html",
     "network.html",
     "os.html",
-    "python-template.html"
+    "python-template.html",
+    "tools.html"
   ]
 };
