@@ -20,6 +20,7 @@ export const SITE_CONFIG = {
     "misc.html",
     "network.html",
     "os.html",
-    "python-template.html"
+    "python-template.html",
+    "tools.html"
   ]
 };
