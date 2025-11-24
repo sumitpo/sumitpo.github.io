@@ -21,6 +21,7 @@ export const SITE_CONFIG = {
     "music.html",
     "network.html",
     "os.html",
+    "osint.html",
     "python-template.html",
     "tools.html"
   ]
